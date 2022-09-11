@@ -1,4 +1,2 @@
-﻿  ExpGenerate.cpp
-D:\software\C&C++\Visual Studio\project\four fundamental operations\four fundamental operations\ExpGenerate.cpp(46): warning C4715: “priority”: 不是所有的控件路径都返回值
-D:\software\C&C++\Visual Studio\project\four fundamental operations\four fundamental operations\ExpGenerate.cpp(30): warning C4715: “Question::GeneSymbol”: 不是所有的控件路径都返回值
+﻿  main.cpp
   four fundamental operations.vcxproj -> D:\software\C&C++\Visual Studio\project\four fundamental operations\x64\Debug\four fundamental operations.exe

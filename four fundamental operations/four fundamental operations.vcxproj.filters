@@ -27,12 +27,18 @@
     <ClCompile Include="expression.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Language.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="expression.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Student.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Language.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

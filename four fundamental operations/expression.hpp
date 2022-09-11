@@ -2,7 +2,8 @@
 #ifndef __expression_HPP__
 #define __expression_HPP__
 
-#include<iostream>
+#include <iostream>
+#include "Language.hpp"
 using namespace std;
 
 class Fraction {
@@ -23,25 +24,27 @@ class Question {
 public :
 	int quesNum;	//题目数量
 	int symbolNum;	//运算符数量，用来确定表达式长度
-
+	Language Lang;
 	string GeneSymbol(int m);
 	void SetQuesNum(int quesNum);
 	Fraction GetAnswer(string expression);
+	void setLang(Language lang);
+	virtual void ExpGenerate(char modeNum) = 0;
 };
 
 class QuestionFive : public Question {		//五年级的题目
 public :
-	void ExpGenerate(char modeNum);
+	virtual void ExpGenerate(char modeNum) override;
 };
 
 class QuestionFour : public Question {
 public :
-	void ExpGenerate(char modeNum);
+	virtual void ExpGenerate(char modeNum) override;
 };
 
 class QuestionThree : public Question {
 public:
-	void ExpGenerate(char modeNum);
+	virtual void ExpGenerate(char modeNum) override;
 };
 
 #endif

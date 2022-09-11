@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Student.hpp"
+#include "Language.hpp"
 #include <time.h>
 #include <cstring>
 
@@ -33,9 +34,11 @@ int main(int argc, char** argv) {
 	* 默认为程序在命令行同时输出题目和答案
 	* 使用单个字母作为参数，应在参数前加上“-”；使用完整单词作为参数，应在参数前加上“--”
 	*/
+
 	char mode = '\0';
 	bool setLang = true, setMode = true;		//防止多次输入同类参数，例如同时使用参数"c"和参数"e"，表示同时使用中文和英文
 	bool setQues = true;	//当用户输入的参数为'w'，即将题目输出到文件中，则不需要用户输入题目数量，题目数量固定为1000
+	string lang;
 	for (int i = 1, j = 0; i < argc; i++, j = 0) {
 		if (argv[i][0] == '-' && argv[i][1] != '-') {
 			j = 1;
@@ -44,47 +47,43 @@ int main(int argc, char** argv) {
 				{
 				case 'c':
 					if (setLang) {
-
+						lang = "Chinese";
 						setLang = false;
 					}
 					else {
 						cout << "请输入正确的参数" << endl;
 						return 0;
 					}
-					cout << "ccc" << endl;
 					break;
 				case 'e':
 					if (setLang) {
-
+						lang = "English";
 						setLang = false;
 					}
 					else {
 						cout << "请输入正确的参数" << endl;
 						return 0;
 					}
-					cout << "eee" << endl;
 					break;
 				case 'f':
 					if (setLang) {
-
+						lang = "French";
 						setLang = false;
 					}
 					else {
 						cout << "请输入正确的参数" << endl;
 						return 0;
 					}
-					cout << "fff" << endl;
 					break;
 				case 'g':
 					if (setLang) {
-
+						lang = "German";
 						setLang = false;
 					}
 					else {
 						cout << "请输入正确的参数" << endl;
 						return 0;
 					}
-					cout << "ggg" << endl;
 					break;
 				case 'w':
 					if (setMode) {
@@ -120,19 +119,19 @@ int main(int argc, char** argv) {
 			index = index + 2;
 			if (strcmp("Chinese", index) == 0 && setLang) {
 				setLang = false;
-				cout << "Chinese" << endl;
+				lang = "Chinese";
 			}
 			else if (strcmp("English", index) == 0 && setLang) {
 				setLang = false;
-				cout << "English" << endl;
+				lang = "English";
 			}
 			else if (strcmp("French", index) == 0 && setLang) {
 				setLang = false;
-				cout << "French" << endl;
+				lang = "French";
 			}
 			else if (strcmp("German", index) == 0 && setLang) {
 				setLang = false;
-				cout << "German" << endl;
+				lang = "German";
 			}
 			else {
 				cout << "请输入正确的参数" << endl;
@@ -143,11 +142,24 @@ int main(int argc, char** argv) {
 	int num;	//应输出的四则运算的数目
 	int gra;	//输入年级
 	e grade;
+	Language Lang;
+	if (lang == "English") {
+		Lang.setLang(1);
+	}
+	else if (lang == "French") {
+		Lang.setLang(2);
+	}
+	else if (lang == "German") {
+		Lang.setLang(3);
+	}
+	else {
+		Lang.setLang(0);
+	}
 	srand(unsigned(time(NULL)));		//随机数种子不能放在类的函数中，否则可能会导致获得相同的随机数
-	cout << "请输入年级(3、4或5):" << endl;
+	cout << Lang.showLang(0) << endl;
 	cin >> gra;
 	while (gra != 3 && gra != 4 && gra != 5) {
-		cout << "请输入正确的年级(3、4或5):" << endl;
+		cout << Lang.showLang(1) << endl;
 		cin >> gra;
 	}
 	switch (gra)
@@ -164,10 +176,10 @@ int main(int argc, char** argv) {
 	}
 
 	if (setQues) {
-		cout << "请输入题目的数量:" << endl;
+		cout << Lang.showLang(2) << endl;
 		cin >> num;
 		while (num <= 0) {
-			cout << "请输入正确的题目数量:" << endl;
+			cout << Lang.showLang(3) << endl;
 			cin >> num;
 		}
 	}
@@ -179,26 +191,20 @@ int main(int argc, char** argv) {
 	switch (grade)
 	{
 	case GradeTh:
-		student = new GradeThree();		//上转型对象
+		student = new GradeThree(Lang);		//上转型对象
 		break;
 	case GradeFo:
-		student = new GradeFour();
+		student = new GradeFour(Lang);
 		break;
 	case GradeFi:
-		student = new GradeFive();
+		student = new GradeFive(Lang);
 		break;
 	}
+	
 
 	student->Calculate(num, mode);
 
 	getchar();
-	cout << endl
-		<< "(重新运行程序请输入r)" << endl
-		<< "回车键退出程序:" << endl;
 	delete student;
-	if (getchar() == 'r') {
-		cout << endl;
-		main(argc, argv);
-	}
 	return 0;
 }

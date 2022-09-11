@@ -11,6 +11,10 @@ using namespace std;
 
 //创建四则运算表达式
 
+void Question::setLang(Language lang) {
+	Lang.langType = lang.langType;
+}
+
 string Question :: GeneSymbol(int m) {	//随机生成运算符
 	switch (m % 4)
 	{
@@ -302,7 +306,7 @@ void QuestionFive :: ExpGenerate(char modeNum) {			//五年级难度
 			}
 			else if (modeNum == 'q') {
 				cout << expression << endl;
-				cout << "请输入答案:" << endl;
+				cout << Lang.showLang(4) << endl;
 				double userAnswer1 = 0;
 				Fraction userAnswer2;
 				string tmp;
@@ -317,20 +321,21 @@ void QuestionFive :: ExpGenerate(char modeNum) {			//五年级难度
 					userAnswer2.denominator = atoi(subs.c_str());
 				}
 				if ((abs(userAnswer1 - decimalFraction) < 1e-2) || (userAnswer2 == answer)) {
-					cout << "回答正确" << endl;
+					cout << Lang.showLang(5) << endl;
 					rightAnswer++;
-					cout << "正确:" << rightAnswer << "\t错误:" << falseAnswer << endl;
+					cout << Lang.showLang(6) << rightAnswer << "\t" << Lang.showLang(7) << falseAnswer << endl;
 				}
 				else {
-					cout << "回答错误，正确答案为:" << decimalFraction;
+					cout << Lang.showLang(8) << decimalFraction;
 					if (answer.denominator != 1) {		//如果答案可以是分数，就输出分数
-						cout << "\t或\t" << answer.molecule << "/" << answer.denominator << endl;
+						cout << "  " << Lang.showLang(9) << "  " << answer.molecule << "/" << answer.denominator << endl;
+						cout << endl;
 					}
 					else {
 						cout << endl;
 					}
 					falseAnswer++;
-					cout << "正确:" << rightAnswer << "\t错误:" << falseAnswer << endl;
+					cout << Lang.showLang(6) << rightAnswer << "\t" << Lang.showLang(7) << falseAnswer << endl;
 				}
 				expression = "";
 				left = right = setRight = 0;
@@ -338,7 +343,8 @@ void QuestionFive :: ExpGenerate(char modeNum) {			//五年级难度
 			}
 			cout << expression << "\t" << decimalFraction;
 			if (answer.denominator != 1) {		//如果答案可以是分数，就输出分数
-				cout << "\t或\t" << answer.molecule << "/" << answer.denominator << endl;
+				cout << "  " << Lang.showLang(9) << "  " << answer.molecule << "/" << answer.denominator << endl;
+				cout << endl;
 			}
 			else {
 				cout << endl;
@@ -429,7 +435,7 @@ void QuestionFour::ExpGenerate(char modeNum) {			//四年级难度
 			}
 			else if (modeNum == 'q') {
 				cout << expression << endl;
-				cout << "请输入答案:" << endl;
+				cout << Lang.showLang(4) << endl;
 				double userAnswer1 = 0;
 				Fraction userAnswer2;
 				string tmp;
@@ -444,20 +450,21 @@ void QuestionFour::ExpGenerate(char modeNum) {			//四年级难度
 					userAnswer2.denominator = atoi(subs.c_str());
 				}
 				if (abs(userAnswer1 - decimalFraction) < 1e-2 || userAnswer2 == answer) {
-					cout << "回答正确" << endl;
+					cout << Lang.showLang(5) << endl;
 					rightAnswer++;
-					cout << "正确:" << rightAnswer << "\t错误:" << falseAnswer << endl;
+					cout << Lang.showLang(6) << rightAnswer << "\t" << Lang.showLang(7) << falseAnswer << endl;
 				}
 				else {
-					cout << "回答错误，正确答案为:" << decimalFraction;
+					cout << Lang.showLang(8) << decimalFraction;
 					if (answer.denominator != 1) {		//如果答案可以是分数，就输出分数
-						cout << "\t或\t" << answer.molecule << "/" << answer.denominator << endl;
+						cout << "  " << Lang.showLang(9) << "  " << answer.molecule << "/" << answer.denominator << endl;
+						cout << endl;
 					}
 					else {
 						cout << endl;
 					}
 					falseAnswer++;
-					cout << "正确:" << rightAnswer << "\t错误:" << falseAnswer << endl;
+					cout << Lang.showLang(6) << rightAnswer << "\t" << Lang.showLang(7) << falseAnswer << endl;
 				}
 				expression = "";
 				left = right = setRight = 0;
@@ -465,7 +472,8 @@ void QuestionFour::ExpGenerate(char modeNum) {			//四年级难度
 			}
 			cout << expression << "\t" << decimalFraction;
 			if (answer.denominator != 1) {		//如果答案可以是分数，就输出分数
-				cout << "\t或\t" << answer.molecule << "/" << answer.denominator << endl;
+				cout << "  " << Lang.showLang(9) << "  " << answer.molecule << "/" << answer.denominator << endl;
+				cout << endl;
 			}
 			else {
 				cout << endl;
@@ -555,7 +563,7 @@ void QuestionThree::ExpGenerate(char modeNum) {			//三年级难度
 			}
 			else if (modeNum == 'q') {
 				cout << expression << endl;
-				cout << "请输入答案:" << endl;
+				cout << Lang.showLang(4) << endl;
 				double userAnswer1 = 0;
 				Fraction userAnswer2;
 				string tmp;
@@ -570,20 +578,21 @@ void QuestionThree::ExpGenerate(char modeNum) {			//三年级难度
 					userAnswer2.denominator = atoi(subs.c_str());
 				}
 				if (abs(userAnswer1 - decimalFraction) < 1e-2 || userAnswer2 == answer) {
-					cout << "回答正确" << endl;
+					cout << Lang.showLang(5) << endl;
 					rightAnswer++;
-					cout << "正确:" << rightAnswer << "\t错误:" << falseAnswer << endl;
+					cout << Lang.showLang(6) << rightAnswer << "\t" << Lang.showLang(7) << falseAnswer << endl;
 				}
 				else {
-					cout << "回答错误，正确答案为:" << decimalFraction;
+					cout << Lang.showLang(8) << decimalFraction;
 					if (answer.denominator != 1) {		//如果答案可以是分数，就输出分数
-						cout << "\t或\t" << answer.molecule << "/" << answer.denominator << endl;
+						cout << "  " << Lang.showLang(9) << "  " << answer.molecule << "/" << answer.denominator << endl;
+						cout << endl;
 					}
 					else {
 						cout << endl;
 					}
 					falseAnswer++;
-					cout << "正确:" << rightAnswer << "\t错误:" << falseAnswer << endl;
+					cout << Lang.showLang(6) << rightAnswer << "\t" << Lang.showLang(7) << falseAnswer << endl;
 				}
 				expression = "";
 				left = right = setRight = 0;
@@ -591,7 +600,8 @@ void QuestionThree::ExpGenerate(char modeNum) {			//三年级难度
 			}
 			cout << expression << "\t" << decimalFraction;
 			if (answer.denominator != 1) {		//如果答案可以是分数，就输出分数
-				cout << "\t或\t" << answer.molecule << "/" << answer.denominator << endl;
+				cout << "  " << Lang.showLang(9) << "  " << answer.molecule << "/" << answer.denominator << endl;
+				cout << endl;
 			}
 			else {
 				cout << endl;

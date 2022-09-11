@@ -4,6 +4,7 @@
 #define __Student_HPP__
 
 #include "expression.hpp"
+#include "Language.hpp"
 
 enum e
 {
@@ -18,24 +19,25 @@ public:
 	char modeNum;
 	Grade();
 	Grade(e grade);
+	Question *Ques;
 	virtual void Calculate(int num, char modeNum) = 0;
 };
 
 class GradeFive : public Grade {
 public :
-	QuestionFive ques;
+	GradeFive(Language Lang);
 	virtual void Calculate(int num, char modeNum) override;		//参数num是题目的数量
 };
 
 class GradeFour : public Grade {
 public:
-	QuestionFour ques;
+	GradeFour(Language Lang);
 	virtual void Calculate(int num, char modeNum) override;
 };
 
 class GradeThree : public Grade {
 public:
-	QuestionThree ques;
+	GradeThree(Language Lang);
 	virtual void Calculate(int num, char modeNum) override;
 };
 

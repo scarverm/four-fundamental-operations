@@ -130,10 +130,12 @@
     <ClCompile Include="ExpGenerate.cpp" />
     <ClCompile Include="expression.cpp" />
     <ClCompile Include="grade.cpp" />
+    <ClCompile Include="Language.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="expression.hpp" />
+    <ClInclude Include="Language.hpp" />
     <ClInclude Include="Student.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
