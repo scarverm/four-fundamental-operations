@@ -21,14 +21,15 @@ public:
 	{ "请输入年级(3、4或5):", "请输入正确的年级(3、4或5):",
 	"请输入题目的数量:", "请输入正确的题目数量:", "请输入答案:",
 	"回答正确", "正确:", "错误:",
-	"回答错误，正确答案为:", "或", "答案:"
+	"回答错误，正确答案为:", "或", "答案:", "请输入正确的参数"
 	};
 	const vector <string> English =
 	{
 		"Please enter grade(3、4 or 5):",
 		"Please enter the correct grade(3、4 or 5):", "Please enter the number of questions:",
 		"Please enter the correct number of questions:", "Please enter the answer:",
-		"Correct", "Correct", "Wrong", "Wrong. the correct answer is:", "or", "answer:"
+		"Correct", "Correct:", "Wrong:", "Wrong. the correct answer is:", "or", "answer:",
+		"Please enter the correct parameters"
 	};
 	const vector <string> French =
 	{
@@ -36,7 +37,8 @@ public:
 		"Veuillez entrer le grade correct:", "Veuillez entrer le nombre de sujets:",
 		"Veuillez entrer le nombre correct de sujets:", "Veuillez entrer une réponse:",
 		"Répondez correctement", "La bonne:", "Les erreurs:",
-		"Réponse incorrecte. La bonne réponse est:", "ou", "réponse:"
+		"Réponse incorrecte. La bonne réponse est:", "ou", "réponse:",
+		"Veuillez entrer les paramètres corrects"
 	};
 	const vector <string> German =
 	{
@@ -44,7 +46,8 @@ public:
 		"Bitte geben sie die richtige klasse ein(3, 4 Oder 5):", "Bitte geben sie die anzahl der titel ein:",
 		"Bitte geben sie die richtige projektnummer ein:", "Bitte geben sie die antwort ein:",
 		"Diese preise sind frevelhaft", "Korrekt:", "Falsch:",
-		"Die korrekte antwort lautet:","oder", "Die antworten:"
+		"Die korrekte antwort lautet:","oder", "Die antworten:",
+		"Bitte geben sie die richtigen parameter ein"
 	};
 
 	Language();

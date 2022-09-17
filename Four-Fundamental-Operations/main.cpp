@@ -9,7 +9,8 @@ int main(int argc, char** argv) {
 	Mode mode[3]{DEFAULT};
 	int modeIndex = 0;
 	bool setLang = true;	//语言应只选一种
-	LangType langType = CHINESE;
+	Language lang;
+	lang.setLang(CHINESE);
 	for (int i = 1, j = 0; i < argc; i++, j = 0) {
 		if (argv[i][0] == '-' && argv[i][1] != '-') {
 			j = 1;
@@ -26,7 +27,7 @@ int main(int argc, char** argv) {
 					mode[2] = FRACTION;
 					break;
 				default:
-					cout << "请输入正确的参数" << endl;
+					cout << lang.showLang(11) << endl;
 					return 0;
 					break;
 				}
@@ -38,19 +39,19 @@ int main(int argc, char** argv) {
 			index = index + 2;
 			if (strcmp("Chinese", index) == 0 && setLang) {
 				setLang = false;
-				langType = CHINESE;
+				lang.setLang(CHINESE);
 			}
 			else if (strcmp("English", index) == 0 && setLang) {
 				setLang = false;
-				langType = ENGLISH;
+				lang.setLang(ENGLISH);
 			}
 			else if (strcmp("French", index) == 0 && setLang) {
 				setLang = false;
-				langType = FRENCH;
+				lang.setLang(FRENCH);
 			}
 			else if (strcmp("German", index) == 0 && setLang) {
 				setLang = false;
-				langType = GERMAN;
+				lang.setLang(GERMAN);
 			}
 			else {
 				cout << "请输入正确的参数" << endl;
@@ -61,7 +62,7 @@ int main(int argc, char** argv) {
 
 	//设置语言
 	Question ques;
-	ques.Lang.setLang(langType);
+	ques.Lang.setLang(lang.langType);
 
 	//设置年级（难度）
 	int gradeNum;
@@ -85,6 +86,8 @@ int main(int argc, char** argv) {
 			break;
 		default:
 			cout << ques.Lang.showLang(1) << endl;
+			cin.clear();	//清除缓冲区，防止跳过cin
+			cin.ignore(100, '\n'); 	//忽略100个字符，直到遇到'\n'
 			break;
 		}
 	}
@@ -105,6 +108,8 @@ int main(int argc, char** argv) {
 			}
 			else {
 				cout << ques.Lang.showLang(3) << endl;
+				cin.clear();	//清除缓冲区，防止跳过cin
+				cin.ignore(100, '\n'); 	//忽略100个字符，直到遇到'\n'
 			}
 		}
 	}

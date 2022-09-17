@@ -1,20 +1,20 @@
 #include "fraction.hpp"
 
-Fraction Fraction::FraGenerate(int randomNum1, int randomNum2)
-{
-	if (randomNum1 > randomNum2) {		//保证分子比分母小
-		int t = randomNum1;
-		randomNum1 = randomNum2;
-		randomNum2 = t;
-	}
-	if (randomNum1 == randomNum2) {		//保证分子与分母不相等
-		randomNum2 += 1;
-	}
-	Fraction randomFra;
-	randomFra.molecule = randomNum1;
-	randomFra.denominator = randomNum2;
-	return randomFra;
-}
+//Fraction Fraction::FraGenerate(int randomNum1, int randomNum2)
+//{
+//	if (randomNum1 > randomNum2) {		//保证分子比分母小
+//		int t = randomNum1;
+//		randomNum1 = randomNum2;
+//		randomNum2 = t;
+//	}
+//	if (randomNum1 == randomNum2) {		//保证分子与分母不相等
+//		randomNum2 += 1;
+//	}
+//	Fraction randomFra;
+//	randomFra.molecule = randomNum1;
+//	randomFra.denominator = randomNum2;
+//	return randomFra;
+//}
 
 int Gcd::Gcd(int large, int small) {	//求最大公约数，用于对分数约分
 	if (large < 0) {

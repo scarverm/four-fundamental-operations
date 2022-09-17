@@ -1,7 +1,4 @@
-﻿  fraction.cpp
-  main.cpp
-  question.cpp
-  正在生成代码...
-D:\software\C&C++\Visual Studio\project\Four-Fundamental-Operations\Four-Fundamental-Operations\question.cpp(129): warning C4715: “priority”: 不是所有的控件路径都返回值
-D:\software\C&C++\Visual Studio\project\Four-Fundamental-Operations\Four-Fundamental-Operations\question.cpp(246): warning C4715: “Question::GeneSymbol”: 不是所有的控件路径都返回值
+﻿  question.cpp
+D:\software\C&C++\Visual Studio\project\Four-Fundamental-Operations\Four-Fundamental-Operations\question.cpp(288): warning C4715: “priority”: 不是所有的控件路径都返回值
+D:\software\C&C++\Visual Studio\project\Four-Fundamental-Operations\Four-Fundamental-Operations\question.cpp(419): warning C4715: “Question::GeneSymbol”: 不是所有的控件路径都返回值
   Four-Fundamental-Operations.vcxproj -> D:\software\C&C++\Visual Studio\project\Four-Fundamental-Operations\x64\Debug\Four-Fundamental-Operations.exe

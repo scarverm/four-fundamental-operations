@@ -25,13 +25,15 @@ public :
 	bool SetLeftBracket(string& expression, double prob);			//以某一概率生成左括号
 	bool SetRightBracket(string& expression, double prob);			//以某一概率生成右括号
 	void GeneNum(string& expression);			//随机生成运算数
+	void RemoveExcessBracket(string& expression, bool firstRemove = true);	//去除多余的括号
+	//void RemoveAllBracket(string& expression);		//去除所有能去除的括号，并将运算数按从小到大的顺序排列
 
 	void QuestionAndAnswer(string expression, string rightAnswer, int& rightCount, int& falseCount);	//模式1
 	void QuestionAndAnswer(string expression, double rightAnswer, int& rightCount, int& falseCount);
 	void OutputExpresstion(string expression, string answer, bool& firstWrite);		//模式2
 	string randomFraction(int random1, int random2);								//模式3
 	void DefaultShow(string expression, string answer);								//默认模式
-	void ExpGenerate(Mode mode[], int modeNum = 3);	//三种模式(不包括默认模式)
+	void ExpGenerate(Mode mode[],const int modeNum = 3);	//三种模式(不包括默认模式)
 	Fraction GetAnswer(string expression);
 };
 

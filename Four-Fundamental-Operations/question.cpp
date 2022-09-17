@@ -1,5 +1,6 @@
 #include "question.hpp"
 #include <iostream>
+#include <algorithm>
 
 void Question::SetGrade(grade eGrade){
 	this->eGrade = eGrade;
@@ -18,7 +19,7 @@ void Question::SetQuesNum(int quesNum){
 
 bool Question::SetLeftBracket(string& expression, double prob) {
 	double ratio = (double) rand() / RAND_MAX;		//获取0~1的小数
-	if (abs(ratio) <= prob) {
+	if (ratio <= prob) {
 		expression += "(";
 		return true;
 	}
@@ -27,7 +28,7 @@ bool Question::SetLeftBracket(string& expression, double prob) {
 
 bool Question::SetRightBracket(string& expression, double prob) {
 	double ratio = (double)rand() / RAND_MAX;
-	if (abs(ratio) <= prob) {
+	if (ratio <= prob) {
 		expression += ")";
 		return true;
 	}
@@ -38,6 +39,143 @@ void Question::GeneNum(string& expression) {
 	int num = rand() % maxOperand + 1;
 	expression += to_string(num);
 }
+
+void Question::RemoveExcessBracket(string& expression, bool firstRemove) {
+
+	//÷超出了ASCII码，不能正常显示，应先转换为a，否则在后面会报错“读取字符串字符时出错”
+	if (firstRemove) {
+		int change = 0;
+		for (int i = 0; i < expression.length(); i++) {
+			if (
+				(expression[i] < '0' || expression[i] > '9')
+				&& expression[i] != '+' && expression[i] != '-' && expression[i] != '*' && expression[i] != '/' &&
+				expression[i] != '(' && expression[i] != ')'
+				) {
+				change++;		//在用/替换了不能正常显示的÷后，会多出来一个不能显示的字符，因此要用“”再替换一次
+				if (change % 2 == 1) {
+					expression.replace(i, 1, "a");	//用一个可以正常显示但又与表达式中其他符号相区别的符号代替
+				}
+				else {
+					expression.replace(i, 1, "");
+				}
+			}
+		}
+		firstRemove = false;
+	}
+
+	size_t leftBracket, rightBracket;	//左右括号位置
+	char leftSymbol = '\0', rightSymbol = '\0';	//括号左右符号
+	leftBracket = expression.find_last_of('(');				//最内层左括号
+	rightBracket = expression.find(')', leftBracket + 1);	//最内层右括号
+
+	//如果表达式中没有括号，则将中括号替换会小括号，再return
+	if (leftBracket == expression.npos) {
+		replace(expression.begin(), expression.end(), '[', '(');
+		replace(expression.begin(), expression.end(), ']', ')');
+		
+		//不能用replace函数将a替换为÷，因为编译器将÷识别为int类型
+		for (int i = 0; expression[i] != '\0'; i++) {
+			if (expression[i] == 'a') {
+				expression = expression.substr(0, i) + "÷" + expression.substr(i + 1);
+			}
+		}
+		return;
+	}
+
+	if (leftBracket != 0) {
+		leftSymbol = expression[leftBracket - 1];
+	}
+	if (rightBracket != expression.length() - 1) {
+		rightSymbol = expression[rightBracket + 1];
+	}
+
+	string expWithBracket;
+	expWithBracket = expression.substr(leftBracket, rightBracket - leftBracket + 1);
+	string subExp;
+	subExp = expression.substr(leftBracket + 1, rightBracket - leftBracket - 1);
+	//如果括号两边也是括号，可以直接去括号
+	if (leftSymbol == '(' && rightSymbol == ')') {
+		expression.replace(leftBracket - 1, rightBracket - leftBracket + 3, subExp);
+	}
+
+	//+(expression)+ 、+(expression)-、 ((expression)+ 、((expression)- 和 +(expression))形式的都可以直接去括号
+	//另外 '\0'(expression)+ 、'\0'(expression)- 和 +(expression)'\0' 的形式也可以直接去括号
+	else if (
+		(leftSymbol == '+' && (rightSymbol != '/' && rightSymbol != 'a')) ||
+		(leftSymbol == '(' && (rightSymbol == '+' || rightSymbol == '-')) ||	//((expression)+ 、((expression)-
+		(leftSymbol == '+' && rightSymbol == ')') ||	//+(expression))
+		(leftSymbol == '\0' && (rightSymbol == '+' || rightSymbol == '-'))
+		) {
+		expression.replace(leftBracket, rightBracket - leftBracket + 1, subExp);
+	}
+
+	//*(expression) 、((expression)* 、+(expression)* 、-(expression) 、(expression)/ 、(expression)÷形式只有在expression中只有乘和除时才能直接去括号
+	//同理'\0'(expression)* 、'\0'(expression)/ 和 '\0'(expression)÷ 也应先判断表达式内符号
+	else if (
+		(leftSymbol == '-') ||
+		(leftSymbol == '*') ||		//*(expression)
+		(rightSymbol == '*' && (leftSymbol != '/' && leftSymbol != 'a')) ||
+		//((expression)* 、+(expression)* 、-(expression)*
+		(rightSymbol == '/') ||		//(expression)/
+		(rightSymbol == 'a')		//(expression)÷
+		) {
+		bool remove = true;
+		int squareBracket = 0;				//中途可能遇见[和]此时即使[和]之间有+或-也可以根据情况去括号
+		for (int i = 0; i < subExp.length(); i++) {
+			if (subExp[i] == '[') {
+				squareBracket++;
+			}
+			else if (subExp[i] == ']') {
+				squareBracket--;
+			}
+			if (squareBracket == 0 && (subExp[i] == '+' || subExp[i] == '-')) {
+				remove = false;
+				break;
+			}
+		}
+		if (remove) {
+			expression.replace(leftBracket, rightBracket - leftBracket + 1, subExp);
+		}
+		else {		//如果不能直接去括号，则将小括号转为中括号，以便接下来的递归中依旧能找到未处理的最内层括号
+			expression.replace(leftBracket, 1, "[");
+			expression.replace(rightBracket, 1, "]");
+		}
+	}
+
+	//如果只剩表达式两边的括号，则取消括号
+	else if (leftSymbol == '\0' && rightSymbol == '\0') {
+		expression = expression.substr(1, expression.length() - 2);
+	}
+
+	//其他情况均不能去括号，将小括号转为中括号
+	else {
+		expression.replace(leftBracket, 1, "[");
+		expression.replace(rightBracket, 1, "]");
+	}
+
+	RemoveExcessBracket(expression, firstRemove);
+	return;
+}
+
+//void Question::RemoveAllBracket(string& expression) {
+//	int leftBracket = -1, rightBracket = -1;
+//	char leftSymbol = '\0', rightSymbol = '\0';
+//	leftBracket = expression.find_last_of('(');
+//	rightBracket = expression.find(')', leftBracket + 1);
+//	if (leftBracket != 0) {
+//		leftSymbol = expression[leftBracket - 1];
+//	}
+//	if (rightBracket != expression.length() - 1) {
+//		rightSymbol = expression[rightBracket + 1];
+//	}
+//	string frontExp, fullExp;	//frontExp：括号前的表达式，fullExp：带括号的表达式，需要被替换
+//
+//	//如果表达式中没有括号，就把所有可以改变顺序的数进行排序
+//	if (leftBracket == expression.npos) {
+//
+//	}
+//	
+//}
 
 void Question::QuestionAndAnswer(string expression, string rightAnswer, int& rightCount, int& falseCount){
 	cout << expression << endl;
@@ -75,18 +213,39 @@ void Question::OutputExpresstion(string expression, string answer, bool& firstWr
 	ofstream outfile;
 	if (firstWrite) {
 		outfile.open(".\\1000questions.txt");			//覆盖写入
-		outfile << expression << "\t" << Lang.showLang(10) << answer << endl;
+		if (answer.find('/') == answer.npos) {	//如果答案不是分数形式的，就转为浮点数，这样用cout输出时不会输出多余的0
+			double decimalAnswer;
+			decimalAnswer = stod(answer);
+			outfile << expression << "\t" << Lang.showLang(10) << decimalAnswer << endl;
+		}
+		else {
+			outfile << expression << "\t" << Lang.showLang(10) << answer << endl;
+		}
 		firstWrite = false;
 	}
 	else {
 		outfile.open(".\\1000questions.txt", ios::app);	//不覆盖写入
-		outfile << expression << "\t" << Lang.showLang(10) << answer << endl;
+		if (answer.find('/') == answer.npos) {
+			double decimalAnswer;
+			decimalAnswer = stod(answer);
+			outfile << expression << "\t" << Lang.showLang(10) << decimalAnswer << endl;
+		}
+		else {
+			outfile << expression << "\t" << Lang.showLang(10) << answer << endl;
+		}
 	}
 	outfile.close();
 }
 
 void Question::DefaultShow(string expression, string answer) {
-	cout << expression << "\t" << Lang.showLang(10) << answer << endl;
+	if (answer.find('/') == answer.npos) {	//如果答案不是分数形式的，就转为浮点数，这样用cout输出时不会输出多余的0
+		double decimalAnswer;
+		decimalAnswer = stod(answer);
+		cout << expression << "\t" << Lang.showLang(10) << decimalAnswer << endl;
+	}
+	else {
+		cout << expression << "\t" << Lang.showLang(10) << answer << endl;
+	}
 }
 
 string Question::randomFraction(int random1, int random2)
@@ -106,7 +265,7 @@ string Question::randomFraction(int random1, int random2)
 	randomFra.denominator /= gcd;
 	randomFra.molecule /= gcd;
 	string randomFraString;
-	randomFraString = to_string(random1) + "/" + to_string(random2);
+	randomFraString ="(" + to_string(randomFra.molecule) + "/" + to_string(randomFra.denominator) + ")";
 	return randomFraString;
 }
 
@@ -130,11 +289,28 @@ int priority(char c) {
 
 Fraction Question::GetAnswer(string expression)
 {
+	int change = 0;
+	for (int i = 0; i < expression.length(); i++) {		//÷超出了ASCII码，不能正常显示，应先转换为/，否则在后面会报错“读取字符串字符时出错”
+		if (
+			(expression[i] <'0' || expression[i] > '9') 
+			&& expression[i] != '+' && expression[i] != '-' && expression[i] != '*' && expression[i] != '/' &&
+			expression[i] != '(' && expression[i] != ')'
+			) {
+			change++;		//在用/替换了不能正常显示的÷后，会多出来一个不能显示的字符，因此要用“”再替换一次
+			if (change % 2 == 1) {
+				expression.replace(i, 1, "/");
+			}
+			else {
+				expression.replace(i, 1, "");
+			}
+		}
+	}
+
 	//中缀表达式转为后缀表达式
 	stack <char> sta;
 	string postexp;
 	char ch;
-	for (int i = 0; expression[i] != '\0'; i++) {
+	for (size_t i = 0; expression[i] != '\0'; i++) {
 		if (expression[i] == '(') {
 			sta.push(expression[i]);
 		}
@@ -146,10 +322,7 @@ Fraction Question::GetAnswer(string expression)
 			sta.pop();
 		}
 		else if (expression[i] == '+' || expression[i] == '-' || expression[i] == '*' ||
-			expression[i] == '/' || expression[i] == '÷') {
-			if (expression[i] == '÷') {
-				expression[i] = '/';
-			}
+			expression[i] == '/') {
 			while (!sta.empty() && priority(expression[i]) <= priority(sta.top())) {
 				ch = sta.top();
 				sta.pop();
@@ -291,12 +464,12 @@ void Question::ExpGenerate(Mode mode[], int modeNum){
 		case FIVE:
 			GetSymbolNum(rand() % (10 - 7 + 1) + 7, fractionMode);		//7~10
 			leftProb = rightProb = 0.5;
-			maxOperand = 100;
+			maxOperand = 99;
 			break;
 		}
 
 		//在表达式的开头以一定概率添加括号
-		if (SetLeftBracket(expression, leftProb)) {
+		while (SetLeftBracket(expression, leftProb)) {
 			left++;
 			setRight = 0;
 		}
@@ -314,7 +487,7 @@ void Question::ExpGenerate(Mode mode[], int modeNum){
 		for (int j = 0; j < symbolNum; j++) {
 			expression += GeneSymbol(rand(), fractionMode);
 			if (j < symbolNum - 1) {
-				if (SetLeftBracket(expression, leftProb)) {
+				while (SetLeftBracket(expression, leftProb)) {
 					left++;
 					setRight = 0;
 				}
@@ -327,7 +500,7 @@ void Question::ExpGenerate(Mode mode[], int modeNum){
 			}
 			setRight++;
 			if (right < left && setRight >= 2) {
-				if (SetRightBracket(expression, rightProb)) {
+				while (right < left && SetRightBracket(expression, rightProb)) {
 					right++;
 				}
 			}
@@ -336,6 +509,11 @@ void Question::ExpGenerate(Mode mode[], int modeNum){
 			expression += ")";
 			right++;
 		}
+		//cout << endl << expression << endl;
+
+		//获得表达式后，应去除多余的括号，因为括号的生成是随机的
+		RemoveExcessBracket(expression);
+		//cout << expression << endl;
 
 		//计算表达式，获得答案
 		Fraction answer = GetAnswer(expression);
@@ -346,6 +524,16 @@ void Question::ExpGenerate(Mode mode[], int modeNum){
 			left = right = setRight = 0;
 			continue;
 		}
+
+		//如果在真分数模式下，表达式答案不是真分数则跳过
+		if (fractionMode && answer.molecule >= answer.denominator) {
+			quesNum++;
+			expression = "";
+			left = right = setRight = 0;
+			continue;
+		}
+
+		//跳过重复的题目
 		auto fi = find(noRepetition.begin(), noRepetition.end(), decimalAnswer);
 		if (fi != noRepetition.end()) {
 			quesNum++;
